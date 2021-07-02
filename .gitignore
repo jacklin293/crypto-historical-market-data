@@ -14,5 +14,11 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# binary created by go build
+crypto-historical-market-data
+
+# mariadb data created by docker-compose
 mariadb
+
+# data created when dealing with Binance public data
 data
