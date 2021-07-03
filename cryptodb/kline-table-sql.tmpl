@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS `{{.table_name}}` (
   `id` int(10) UNSIGNED NOT NULL COMMENT 'Primary key',
   `kline_interval` varchar(4) NOT NULL COMMENT 'Interval e.g. 1m, 1h, 1w',
-  `open` int(10) UNSIGNED NOT NULL COMMENT 'Open price',
-  `high` int(10) UNSIGNED NOT NULL COMMENT 'High price',
-  `low` int(10) UNSIGNED NOT NULL COMMENT 'Low price',
-  `close` int(10) UNSIGNED NOT NULL COMMENT 'Close price',
-  `volume` int(10) UNSIGNED NOT NULL COMMENT 'Volume',
+  `open` float UNSIGNED NOT NULL COMMENT 'Open price',
+  `high` float UNSIGNED NOT NULL COMMENT 'High price',
+  `low` float UNSIGNED NOT NULL COMMENT 'Low price',
+  `close` float UNSIGNED NOT NULL COMMENT 'Close price',
+  `volume` float UNSIGNED NOT NULL COMMENT 'Volume',
   `open_time` datetime NOT NULL COMMENT 'Open time',
   `close_time` datetime NOT NULL COMMENT 'Close time'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='{{.table_name}}';
