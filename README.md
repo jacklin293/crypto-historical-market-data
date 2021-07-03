@@ -50,7 +50,7 @@ go mod download
 go build
 ```
 
-# How to use it
+# How to use
 
 Execute the binary file, then enter the pair and period that you are interested in.
 
