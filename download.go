@@ -36,7 +36,7 @@ func downloadKlineFile(pair string, interval string, year string, month string) 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Failed to download '%s', status code: %d", downloadUrl, resp.StatusCode)
+		return fmt.Errorf(" - Failed to download '%s', status code: %d", downloadUrl, resp.StatusCode)
 	}
 
 	// Create folder if not exists
@@ -47,7 +47,7 @@ func downloadKlineFile(pair string, interval string, year string, month string) 
 
 	// Check if file exists
 	if checkIfFileExists(filePath) {
-		fmt.Printf("File '%s' has already existed\n", filePath)
+		fmt.Printf(" - File '%s' has already existed\n", filePath)
 		return nil
 	}
 
@@ -59,7 +59,7 @@ func downloadKlineFile(pair string, interval string, year string, month string) 
 	if _, err = io.Copy(out, resp.Body); err != nil {
 		return err
 	}
-	fmt.Printf("File '%s' has been downloaded successfully\n", filePath)
+	fmt.Printf(" - File '%s' has been downloaded successfully\n", filePath)
 	return nil
 }
 

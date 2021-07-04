@@ -84,7 +84,7 @@ func unzip(src string, dst string) (err error) {
 
 		dstFile.Close()
 		fileInArchive.Close()
-		fmt.Printf("File '%s' has been decompressed successfully\n", filePath)
+		fmt.Printf(" - File '%s' has been decompressed successfully\n", filePath)
 	}
 	return
 }

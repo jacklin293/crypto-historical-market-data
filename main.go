@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"crypto-historical-market-data/cryptodb"
 	"flag"
 	"fmt"
 	"log"
@@ -10,11 +11,11 @@ import (
 )
 
 const (
-	FOLDER_DOWNLOAD         = "data/download"
-	FOLDER_CSV              = "data/csv"
-	BINANCE_PUBLIC_DATA_URL = "https://data.binance.vision/data/spot/monthly/klines"
-	DB_DSN                  = "root:root@tcp(127.0.0.1:3306)/crypto_db?charset=utf8mb4"
-	DB_KLINES_BATCH_NUMBER  = 200
+	FOLDER_DOWNLOAD               = "data/download"
+	FOLDER_CSV                    = "data/csv"
+	BINANCE_PUBLIC_DATA_URL       = "https://data.binance.vision/data/spot/monthly/klines"
+	DB_DSN                        = "root:root@tcp(127.0.0.1:3306)/crypto_db?charset=utf8mb4"
+	DB_KLINES_BATCH_INSERT_NUMBER = 200
 )
 
 func main() {
@@ -79,6 +80,12 @@ func main() {
 		month = *fMonth
 	}
 
+	// Connect to DB
+	db, err := cryptodb.NewDB(DB_DSN)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Download files
 	fmt.Println("\nStart to download file(s)")
 	if err = downloadFiles(pair, interval, year, month); err != nil {
@@ -92,8 +99,8 @@ func main() {
 	}
 
 	// Feed csv into DB
-	fmt.Println("\nFeed data into database")
-	if err = feedCsvToDB(pair, interval, year, month); err != nil {
+	fmt.Println("\nStart to feed data into database")
+	if err = feedCsvToDB(db, pair, interval, year, month); err != nil {
 		log.Fatal(err)
 	}
 }

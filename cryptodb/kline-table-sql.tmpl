@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS `{{.table_name}}` (
-  `id` int(10) UNSIGNED NOT NULL COMMENT 'Primary key',
   `kline_interval` varchar(4) NOT NULL COMMENT 'Interval e.g. 1m, 1h, 1w',
   `open` float UNSIGNED NOT NULL COMMENT 'Open price',
   `high` float UNSIGNED NOT NULL COMMENT 'High price',
@@ -11,8 +10,4 @@ CREATE TABLE IF NOT EXISTS `{{.table_name}}` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='{{.table_name}}';
 
 ALTER TABLE `{{.table_name}}`
-  ADD PRIMARY KEY IF NOT EXISTS (`id`),
   ADD UNIQUE KEY IF NOT EXISTS `kline_interval_open_time` (`kline_interval`,`open_time`) USING BTREE;
-
-ALTER TABLE `{{.table_name}}`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=4;

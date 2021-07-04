@@ -1,10 +1,18 @@
 package cryptodb
 
 import (
+	"bytes"
+	"fmt"
+	"html/template"
+	"strings"
 	"time"
 )
 
-type BinanceBTCUSDTKline struct {
+const (
+	TEMPLATE_KLINE_TABLE_SQL = "cryptodb/kline-table-sql.tmpl"
+)
+
+type BinanceBtcusdtKline struct {
 	Id            int64
 	KlineInterval string
 	Open          float64
@@ -16,18 +24,47 @@ type BinanceBTCUSDTKline struct {
 	CloseTime     time.Time
 }
 
-func (db *DB) InsertBatchKlines() (id int64, err error) {
+func GetTableName(pair string) string {
+	return fmt.Sprintf("binance_%s_klines", strings.ToLower(pair))
+}
 
-	/*
-		k := BinanceBTCUSDTKline{
+func NewBinanceBtcusdtKline(interval string, data map[string]interface{}) BinanceBtcusdtKline {
+	return BinanceBtcusdtKline{
+		KlineInterval: interval,
+		Open:          data["open"].(float64),
+		High:          data["high"].(float64),
+		Low:           data["low"].(float64),
+		Close:         data["close"].(float64),
+		Volume:        data["volume"].(float64),
+		OpenTime:      data["open_time"].(time.Time),
+		CloseTime:     data["close_time"].(time.Time),
+	}
+}
+
+// Create kline table
+func (db *DB) CreateBinanceBtcusdtKlineTableIfNotExists(tableName string) error {
+	replacement := map[string]string{
+		"table_name": tableName,
+	}
+	var buf bytes.Buffer
+	klineTableSqlTemplate := template.Must(template.ParseFiles(TEMPLATE_KLINE_TABLE_SQL))
+	err := klineTableSqlTemplate.Execute(&buf, replacement)
+	if err != nil {
+		return err
+	}
+
+	// The template contains a few sql statement
+	stats := strings.Split(buf.String(), "\n\n")
+	for _, stat := range stats {
+		if result := db.GormDB.Exec(stat); result.Error != nil {
+			return result.Error
 		}
+	}
 
-		result := db.Create(&k)
+	return nil
+}
 
-		if user.ID == 0 || result.Error != nil || result.RowsAffected == 0 {
-
-		}
-		return user.ID, result.Error
-	*/
-	return 0, nil
+func (db *DB) BatchInsertKlines(klines []BinanceBtcusdtKline) (int64, error) {
+	result := db.GormDB.Create(klines)
+	return result.RowsAffected, result.Error
 }
