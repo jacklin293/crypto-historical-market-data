@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -19,36 +20,63 @@ const (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
+	fPair := flag.String("pair", "", "e.g. BTCUSDT")
+	fInterval := flag.String("interval", "", "e.g. e.g. 1m, 1h, 1d, 1w, 1mo")
+	fYear := flag.String("year", "", "e.g. 2021")
+	fMonth := flag.String("month", "", "e.g. 1, 7, 12 or all")
+	flag.Parse()
+
 	// Pair
-	fmt.Printf("Please enter a pair (e.g. BTCUSDT): ")
-	pair, err := reader.ReadString('\n')
-	pair = strings.Replace(pair, "\n", "", -1) // replace new line to empty from the input
-	if err != nil {
-		log.Fatal(err)
+	var err error
+	var pair string
+	if *fPair == "" {
+		fmt.Printf("Please enter a pair (e.g. BTCUSDT): ")
+		pair, err = reader.ReadString('\n')
+		pair = strings.Replace(pair, "\n", "", -1) // replace new line to empty from the input
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		pair = *fPair
 	}
 
 	// Interval
-	fmt.Printf("Please enter an interval (e.g. 1m, 1h, 1d, 1w, 1mo): ")
-	interval, err := reader.ReadString('\n')
-	interval = strings.Replace(interval, "\n", "", -1)
-	if err != nil {
-		log.Fatal(err)
+	var interval string
+	if *fInterval == "" {
+		fmt.Printf("Please enter an interval (e.g. 1m, 1h, 1d, 1w, 1mo): ")
+		interval, err = reader.ReadString('\n')
+		interval = strings.Replace(interval, "\n", "", -1)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		interval = *fInterval
 	}
 
 	// Year
-	fmt.Printf("Please enter a year (e.g. 2021): ")
-	year, err := reader.ReadString('\n')
-	year = strings.Replace(year, "\n", "", -1)
-	if err != nil {
-		log.Fatal(err)
+	var year string
+	if *fYear == "" {
+		fmt.Printf("Please enter a year (e.g. 2021): ")
+		year, err = reader.ReadString('\n')
+		year = strings.Replace(year, "\n", "", -1)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		year = *fYear
 	}
 
 	// Month
-	fmt.Printf("Please enter a month (e.g. 1, 7, 12 or all): ")
-	month, err := reader.ReadString('\n')
-	month = strings.Replace(month, "\n", "", -1)
-	if err != nil {
-		log.Fatal(err)
+	var month string
+	if *fMonth == "" {
+		fmt.Printf("Please enter a month (e.g. 1, 7, 12 or all): ")
+		month, err = reader.ReadString('\n')
+		month = strings.Replace(month, "\n", "", -1)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		month = *fMonth
 	}
 
 	// Download files
@@ -64,8 +92,8 @@ func main() {
 	}
 
 	// Feed csv into DB
-	// fmt.Println("\nFeed data into database")
-	// if err = feedCsvToDB(pair, interval, year, month); err != nil {
-	//	log.Fatal(err)
-	// }
+	fmt.Println("\nFeed data into database")
+	if err = feedCsvToDB(pair, interval, year, month); err != nil {
+		log.Fatal(err)
+	}
 }

@@ -8,6 +8,8 @@ This project will do these for you:
 * Set up MySQL database
 * Download and decompress files from Binance public data
 * Transfer historical data (csv) to database
+    * Note: Only these fields will be stored into database
+        * `interval`, `open`, `high`, `low`, `close`, `volume`, `open time`, `close time`
 
 Once it's all set, you can start to use it whatever you prefer.
 
@@ -52,7 +54,13 @@ go build
 
 # How to use
 
-Execute the binary file, then enter the pair and period that you are interested in.
+Execute the binary file with params
+
+```
+./crypto-historical-market-data -pair=BTCUSDT -interval=1h -year=2021 -month=1
+```
+
+Execute the binary file without params, then you will be asked to fill them
 
 ```
 ./crypto-historical-market-data
