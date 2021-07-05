@@ -22,3 +22,6 @@ mariadb
 
 # data created when dealing with Binance public data
 data
+
+# MacOS file
+.DS_Store

@@ -47,7 +47,7 @@ func downloadKlineFile(pair string, interval string, year string, month string) 
 
 	// Check if file exists
 	if checkIfFileExists(filePath) {
-		fmt.Printf(" - File '%s' has already existed\n", filePath)
+		fmt.Printf(" - File '%s' has been downloaded already\n", filePath)
 		return nil
 	}
 

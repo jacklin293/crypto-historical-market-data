@@ -13,7 +13,6 @@ const (
 )
 
 type BinanceBtcusdtKline struct {
-	Id            int64
 	KlineInterval string
 	Open          float64
 	High          float64
