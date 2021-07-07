@@ -23,15 +23,27 @@ func downloadFiles(pair string, interval string, year string, month string) (err
 	return nil
 }
 
-func downloadKlineFile(pair string, interval string, year string, month string) error {
+func downloadKlineFile(pair string, interval string, year string, month string) (err error) {
 	fileName := getZipFileName(pair, interval, year, month)
 	filePath := getZipFilePath(pair, interval, year, month)
 	downloadUrl := fmt.Sprintf("%s/%s/%s/%s", BINANCE_PUBLIC_DATA_URL, pair, interval, fileName)
 
+	// Create folder if not exists
+	folderPath := getZipFolderPath(pair, interval, year)
+	if err = createFolderIfNotExists(folderPath); err != nil {
+		return
+	}
+
+	// Check if file exists
+	if checkIfFileExists(filePath) {
+		fmt.Printf(" - File '%s' has been downloaded already\n", filePath)
+		return
+	}
+
 	// Check if file exists
 	resp, err := http.Get(downloadUrl)
 	if err != nil {
-		return err
+		return
 	}
 	defer resp.Body.Close()
 
@@ -39,28 +51,20 @@ func downloadKlineFile(pair string, interval string, year string, month string) 
 		return fmt.Errorf(" - Failed to download '%s', status code: %d", downloadUrl, resp.StatusCode)
 	}
 
-	// Create folder if not exists
-	folderPath := getZipFolderPath(pair, interval, year)
-	if err = createFolderIfNotExists(folderPath); err != nil {
-		return err
-	}
-
-	// Check if file exists
-	if checkIfFileExists(filePath) {
-		fmt.Printf(" - File '%s' has been downloaded already\n", filePath)
-		return nil
-	}
-
+	// Create a file
 	out, err := os.Create(filePath)
 	if err != nil {
-		return err
+		return
 	}
 	defer out.Close()
+
+	// Copy body to the file
 	if _, err = io.Copy(out, resp.Body); err != nil {
-		return err
+		return
 	}
 	fmt.Printf(" - File '%s' has been downloaded successfully\n", filePath)
-	return nil
+
+	return
 }
 
 func getZipFolderPath(pair string, interval string, year string) string {
