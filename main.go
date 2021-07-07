@@ -80,12 +80,6 @@ func main() {
 		month = *fMonth
 	}
 
-	// Connect to DB
-	db, err := cryptodb.NewDB(DB_DSN)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Download files
 	fmt.Println("\nStart to download file(s)")
 	if err = downloadFiles(pair, interval, year, month); err != nil {
@@ -95,6 +89,12 @@ func main() {
 	// Unzip files
 	fmt.Println("\nStart to unzip file(s)")
 	if err = unzipFiles(pair, interval, year, month); err != nil {
+		log.Fatal(err)
+	}
+
+	// Connect to DB
+	db, err := cryptodb.NewDB(DB_DSN)
+	if err != nil {
 		log.Fatal(err)
 	}
 

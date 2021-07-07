@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS `{{.table_name}}` (
-  `kline_interval` varchar(4) NOT NULL COMMENT 'Interval e.g. 1m, 1h, 1w',
+CREATE TABLE IF NOT EXISTS `klines` (
+  `pair_interval` varchar(15) NOT NULL COMMENT 'pair+interval e.g. btcusdt_1h',
   `open` float UNSIGNED NOT NULL COMMENT 'Open price',
   `high` float UNSIGNED NOT NULL COMMENT 'High price',
   `low` float UNSIGNED NOT NULL COMMENT 'Low price',
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `{{.table_name}}` (
   `volume` float UNSIGNED NOT NULL COMMENT 'Volume',
   `open_time` datetime NOT NULL COMMENT 'Open time',
   `close_time` datetime NOT NULL COMMENT 'Close time'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='{{.table_name}}';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Klines';
 
-ALTER TABLE `{{.table_name}}`
-  ADD UNIQUE KEY IF NOT EXISTS `kline_interval_open_time` (`kline_interval`,`open_time`) USING BTREE;
+ALTER TABLE `klines`
+  ADD UNIQUE KEY IF NOT EXISTS `pair_interval_opentime` (`pair_interval`,`open_time`);

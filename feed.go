@@ -13,10 +13,9 @@ import (
 )
 
 func feedCsvToDB(db *cryptodb.DB, pair string, interval string, year string, month string) (err error) {
-	// Create kline table
-	tableName := cryptodb.GetTableName(pair)
-	fmt.Printf(" - Create table '%s' if not exists\n", tableName)
-	err = db.CreateBinanceBtcusdtKlineTableIfNotExists(tableName)
+	// Create table klines
+	fmt.Println(" - Create table 'klines' if not exists")
+	err = db.CreateTableKlinesIfNotExists()
 	if err != nil {
 		return
 	}
@@ -45,7 +44,7 @@ func handleReadAndInsert(db *cryptodb.DB, pair string, interval string, year str
 
 	fmt.Printf(" - Processing %s\n", csvFileName)
 	go readCsvFile(csvFilePath, DB_KLINES_BATCH_INSERT_NUMBER, lineCh, &lineCounter)
-	if err = insertIntoDB(db, interval, lineCh, &lineCounter); err != nil {
+	if err = insertIntoDB(db, pair, interval, lineCh, &lineCounter); err != nil {
 		return
 	}
 
@@ -85,9 +84,9 @@ func readCsvFile(path string, batchNum int64, ch chan string, lineCounter *int) 
 	}
 }
 
-func insertIntoDB(db *cryptodb.DB, interval string, lineCh chan string, lineCounter *int) (err error) {
+func insertIntoDB(db *cryptodb.DB, pair string, interval string, lineCh chan string, lineCounter *int) (err error) {
 	var lineInsertedCounter int
-	var klines []cryptodb.BinanceBtcusdtKline
+	var klines []cryptodb.Kline
 	for {
 		select {
 		case line := <-lineCh:
@@ -95,10 +94,10 @@ func insertIntoDB(db *cryptodb.DB, interval string, lineCh chan string, lineCoun
 			if err != nil {
 				return err
 			}
-			kline := cryptodb.NewBinanceBtcusdtKline(interval, klineData)
+			kline := cryptodb.NewKline(pair, interval, klineData)
 			klines = append(klines, kline)
 
-			// Batch insert into klines table
+			// Batch insert into table klines
 			if len(klines) == DB_KLINES_BATCH_INSERT_NUMBER {
 				_, err := db.BatchInsertKlines(klines)
 				if err != nil {
