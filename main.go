@@ -14,7 +14,7 @@ const (
 	FOLDER_DOWNLOAD               = "data/download"
 	FOLDER_CSV                    = "data/csv"
 	BINANCE_PUBLIC_DATA_URL       = "https://data.binance.vision/data/spot/monthly/klines"
-	DB_DSN                        = "root:root@tcp(127.0.0.1:3306)/crypto_db?charset=utf8mb4"
+	DB_DSN                        = "root:root@tcp(127.0.0.1:3306)/crypto_db?charset=utf8mb4&parseTime=true"
 	DB_KLINES_BATCH_INSERT_NUMBER = 2000
 )
 
