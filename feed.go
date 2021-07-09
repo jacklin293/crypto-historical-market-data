@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 func feedCsvToDB(db *cryptodb.DB, pair string, interval string, year string, month string) (err error) {
@@ -144,27 +146,27 @@ func processKlineRow(row string) (kline map[string]interface{}, err error) {
 	}
 	openTime := time.Unix(0, openTimestamp*int64(time.Millisecond)).In(time.UTC)
 
-	openPrice, err := strconv.ParseFloat(cols[1], 64)
+	openPrice, err := decimal.NewFromString(cols[1])
 	if err != nil {
 		return
 	}
 
-	highPrice, err := strconv.ParseFloat(cols[2], 64)
+	highPrice, err := decimal.NewFromString(cols[2])
 	if err != nil {
 		return
 	}
 
-	lowPrice, err := strconv.ParseFloat(cols[3], 64)
+	lowPrice, err := decimal.NewFromString(cols[3])
 	if err != nil {
 		return
 	}
 
-	closePrice, err := strconv.ParseFloat(cols[4], 64)
+	closePrice, err := decimal.NewFromString(cols[4])
 	if err != nil {
 		return
 	}
 
-	volume, err := strconv.ParseFloat(cols[5], 64)
+	volume, err := decimal.NewFromString(cols[5])
 	if err != nil {
 		return
 	}

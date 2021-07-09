@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -13,11 +15,11 @@ const (
 
 type Kline struct {
 	PairInterval string // pair+interval e.g. btcusdt_1h
-	Open         float64
-	High         float64
-	Low          float64
-	Close        float64
-	Volume       float64
+	Open         decimal.Decimal
+	High         decimal.Decimal
+	Low          decimal.Decimal
+	Close        decimal.Decimal
+	Volume       decimal.Decimal
 	OpenTime     time.Time
 	CloseTime    time.Time
 }
@@ -25,11 +27,11 @@ type Kline struct {
 func NewKline(pair string, interval string, data map[string]interface{}) Kline {
 	return Kline{
 		PairInterval: fmt.Sprintf("%s_%s", strings.ToLower(pair), interval),
-		Open:         data["open"].(float64),
-		High:         data["high"].(float64),
-		Low:          data["low"].(float64),
-		Close:        data["close"].(float64),
-		Volume:       data["volume"].(float64),
+		Open:         data["open"].(decimal.Decimal),
+		High:         data["high"].(decimal.Decimal),
+		Low:          data["low"].(decimal.Decimal),
+		Close:        data["close"].(decimal.Decimal),
+		Volume:       data["volume"].(decimal.Decimal),
 		OpenTime:     data["open_time"].(time.Time),
 		CloseTime:    data["close_time"].(time.Time),
 	}
