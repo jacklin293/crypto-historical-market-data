@@ -96,7 +96,9 @@ func insertIntoDB(db *cryptodb.DB, pair string, interval string, lineCh chan str
 			if err != nil {
 				return err
 			}
-			kline := cryptodb.NewKline(pair, interval, klineData)
+			klineData["pair"] = pair
+			klineData["interval"] = interval
+			kline := cryptodb.NewKline(klineData)
 			klines = append(klines, kline)
 
 			// Batch insert into table klines

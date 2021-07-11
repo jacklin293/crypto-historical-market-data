@@ -14,26 +14,32 @@ const (
 )
 
 type Kline struct {
-	PairInterval string // pair+interval e.g. btcusdt_1h
-	Open         decimal.Decimal
-	High         decimal.Decimal
-	Low          decimal.Decimal
-	Close        decimal.Decimal
-	Volume       decimal.Decimal
-	OpenTime     time.Time
-	CloseTime    time.Time
+	KlineKey  string // ma type+pair+interval e.g. btcusdt_1h
+	Open      decimal.Decimal
+	High      decimal.Decimal
+	Low       decimal.Decimal
+	Close     decimal.Decimal
+	Volume    decimal.Decimal
+	OpenTime  time.Time
+	CloseTime time.Time
 }
 
-func NewKline(pair string, interval string, data map[string]interface{}) Kline {
+func getKlineKey(pair string, interval string) string {
+	return fmt.Sprintf("%s_%s", strings.ToLower(pair), interval)
+}
+
+func NewKline(data map[string]interface{}) Kline {
+	pair := strings.ToLower(data["pair"].(string))
+	interval := data["interval"].(string)
 	return Kline{
-		PairInterval: fmt.Sprintf("%s_%s", strings.ToLower(pair), interval),
-		Open:         data["open"].(decimal.Decimal),
-		High:         data["high"].(decimal.Decimal),
-		Low:          data["low"].(decimal.Decimal),
-		Close:        data["close"].(decimal.Decimal),
-		Volume:       data["volume"].(decimal.Decimal),
-		OpenTime:     data["open_time"].(time.Time),
-		CloseTime:    data["close_time"].(time.Time),
+		KlineKey:  getKlineKey(pair, interval),
+		Open:      data["open"].(decimal.Decimal),
+		High:      data["high"].(decimal.Decimal),
+		Low:       data["low"].(decimal.Decimal),
+		Close:     data["close"].(decimal.Decimal),
+		Volume:    data["volume"].(decimal.Decimal),
+		OpenTime:  data["open_time"].(time.Time),
+		CloseTime: data["close_time"].(time.Time),
 	}
 }
 
