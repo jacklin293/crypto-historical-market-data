@@ -23,8 +23,9 @@ func feedCsvToDB(db *cryptodb.DB, pair string, interval string, year string, mon
 	}
 
 	// Reading and inserting in batch asynchronously
-	if month == "all" {
-		for i := 1; i <= 12; i++ {
+	if strings.Contains(month, "-") {
+		mRange := getMonthRange(month)
+		for i := mRange[0]; i <= mRange[1]; i++ {
 			if err = handleReadAndInsert(db, pair, interval, year, strconv.Itoa(i)); err != nil {
 				return
 			}

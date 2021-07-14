@@ -60,18 +60,27 @@ Execute the binary file with params
 ./crypto-historical-market-data -pair=BTCUSDT -interval=1h -year=2021 -month=1
 ```
 
-Execute the binary file without params, then you will be asked to fill them
+You can also use interactive way to fill params
 
 ```
 ./crypto-historical-market-data
 
 Please enter a pair (e.g. BTCUSDT): BTCUSDT
-Please enter an interval (e.g. 1m, 1h, 1d, 1w, 1mo): 1h
+Please enter an interval (e.g. 1m  1h  1d  1w  1mo): 1h
 Please enter a year (e.g. 2021): 2021
-Please enter a month (e.g. 1, 7, 12 or all): 1
+Please enter a month (e.g. 1  7 or 1-12): 1
 ```
 
 > INTERVAL: `1m`, `3m`, `5m`, `15m`, `30m`, `1h`, `2h`, `4h`, `6h`, `8h`, `12h`, `1d`, `3d`, `1w`, `1mo`
+
+Download and unzip files only with `-no-feed=true`
+
+```
+./crypto-historical-market-data -pair=BTCUSDT -interval=1h -year=2021 -month=1 -no-feed=true
+```
+
+
+
 
 
 

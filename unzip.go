@@ -11,8 +11,9 @@ import (
 )
 
 func unzipFiles(pair string, interval string, year string, month string) (err error) {
-	if month == "all" {
-		for i := 1; i <= 12; i++ {
+	if strings.Contains(month, "-") {
+		mRange := getMonthRange(month)
+		for i := mRange[0]; i <= mRange[1]; i++ {
 			if err = unzipKlineFile(pair, interval, year, strconv.Itoa(i)); err != nil {
 				return err
 			}

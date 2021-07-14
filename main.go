@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -21,17 +22,22 @@ const (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	fPair := flag.String("pair", "", "e.g. BTCUSDT")
-	fInterval := flag.String("interval", "", "e.g. e.g. 1m, 1h, 1d, 1w, 1mo")
-	fYear := flag.String("year", "", "e.g. 2021")
-	fMonth := flag.String("month", "", "e.g. 1, 7, 12 or all")
+	pairHint := "e.g. BTCUSDT"
+	intervalHint := "e.g. 1m  1h  1d  1w  1mo"
+	yearHint := "e.g. 2021"
+	monthHint := "e.g. 1  7 or 1-12"
+	fPair := flag.String("pair", "", pairHint)
+	fInterval := flag.String("interval", "", intervalHint)
+	fYear := flag.String("year", "", yearHint)
+	fMonth := flag.String("month", "", monthHint)
+	fNoFeed := flag.Bool("no-feed", false, "e.g. true: download and unzip only")
 	flag.Parse()
 
 	// Pair
 	var err error
 	var pair string
 	if *fPair == "" {
-		fmt.Printf("Please enter a pair (e.g. BTCUSDT): ")
+		fmt.Printf("Please enter a pair (%s): ", pairHint)
 		pair, err = reader.ReadString('\n')
 		pair = strings.Replace(pair, "\n", "", -1) // replace new line to empty from the input
 		if err != nil {
@@ -44,7 +50,7 @@ func main() {
 	// Interval
 	var interval string
 	if *fInterval == "" {
-		fmt.Printf("Please enter an interval (e.g. 1m, 1h, 1d, 1w, 1mo): ")
+		fmt.Printf("Please enter an interval (%s): ", intervalHint)
 		interval, err = reader.ReadString('\n')
 		interval = strings.Replace(interval, "\n", "", -1)
 		if err != nil {
@@ -57,7 +63,7 @@ func main() {
 	// Year
 	var year string
 	if *fYear == "" {
-		fmt.Printf("Please enter a year (e.g. 2021): ")
+		fmt.Printf("Please enter a year (%s): ", yearHint)
 		year, err = reader.ReadString('\n')
 		year = strings.Replace(year, "\n", "", -1)
 		if err != nil {
@@ -70,7 +76,7 @@ func main() {
 	// Month
 	var month string
 	if *fMonth == "" {
-		fmt.Printf("Please enter a month (e.g. 1, 7, 12 or all): ")
+		fmt.Printf("Please enter a month or a range (%s): ", monthHint)
 		month, err = reader.ReadString('\n')
 		month = strings.Replace(month, "\n", "", -1)
 		if err != nil {
@@ -92,6 +98,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Only download and unzip
+	if *fNoFeed {
+		return
+	}
+
 	// Connect to DB
 	db, err := cryptodb.NewDB(DB_DSN)
 	if err != nil {
@@ -103,4 +114,19 @@ func main() {
 	if err = feedCsvToDB(db, pair, interval, year, month); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getMonthRange(month string) (r []int) {
+	months := strings.Split(month, "-")
+	start, err1 := strconv.Atoi(months[0])
+	end, err2 := strconv.Atoi(months[1])
+	if err1 != nil || err2 != nil {
+		log.Fatalf("Wrong month format: %v", month)
+	}
+	if start < end {
+		r = append(r, start, end)
+	} else {
+		r = append(r, end, start)
+	}
+	return
 }
