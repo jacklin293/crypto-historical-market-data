@@ -1,4 +1,4 @@
-CREATE TABLE `klines` (
+CREATE TABLE IF NOT EXISTS `klines` (
   `kline_key` varchar(15) NOT NULL COMMENT 'pair+interval e.g. btcusdt_1h',
   `open` decimal(18,8) UNSIGNED NOT NULL COMMENT 'Open price',
   `high` decimal(18,8) UNSIGNED NOT NULL COMMENT 'High price',
@@ -10,4 +10,4 @@ CREATE TABLE `klines` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Klines';
 
 ALTER TABLE `klines`
-  ADD UNIQUE KEY `opentime_klinekey` (`open_time`,`kline_key`) USING BTREE;
+  ADD UNIQUE KEY IF NOT EXISTS `opentime_klinekey` (`open_time`,`kline_key`) USING BTREE;

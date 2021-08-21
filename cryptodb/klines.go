@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	TALBE_KLINES_SQL_PATH = "cryptodb/table-klines.sql"
+	TALBE_KLINES_SQL_PATH = "db_schemas/table-klines.sql"
 )
 
 type Kline struct {
