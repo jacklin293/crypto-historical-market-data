@@ -1,4 +1,6 @@
-# crypto-historical-market-data
+# DEPRECATED
+
+This is an experimental repo and no longer maintained.
 
 This is a tool to transfer historical `kline` (or `candlestick`) data provided by
 [Binance public data](https://github.com/binance/binance-public-data/) into MySQL database.
